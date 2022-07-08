@@ -1,7 +1,11 @@
 package com.lmk.mqtt;
 
+import com.alibaba.fastjson2.JSON;
 import com.lmk.mqtt.cache.ChannelCache;
+import com.lmk.mqtt.entity.BrokerMqttMessage;
 import com.lmk.mqtt.entity.SessionStore;
+import com.lmk.mqtt.exchange.ExchangeEnum;
+import com.lmk.mqtt.service.api.MqService;
 import com.sun.org.apache.bcel.internal.generic.BREAKPOINT;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -15,6 +19,7 @@ import io.netty.handler.codec.mqtt.MqttMessageType;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
+import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -33,9 +39,13 @@ import java.util.Map;
  * @Description TODO
  * @createTime 2022-06-18 13:35:19
  */
+@Component
 public class MqttChannelInboundHandler extends ChannelInboundHandlerAdapter {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ChannelGroup channelGroup;
+
+    @Autowired
+    private MqService mqService;
 
     public MqttChannelInboundHandler(ChannelGroup channelGroup) {
         this.channelGroup = channelGroup;
@@ -81,6 +91,7 @@ public class MqttChannelInboundHandler extends ChannelInboundHandlerAdapter {
                     break;
                 //客户端发布消息请求
                 case PUBLISH:
+                    publishToMq(mqttMessage);
                     MqttMessageBack.pubAckOrPubRec(channel, mqttMessage);
                     break;
                 case PUBACK:
@@ -115,6 +126,14 @@ public class MqttChannelInboundHandler extends ChannelInboundHandlerAdapter {
                     break;
             }
         }
+    }
+
+    private void publishToMq(MqttMessage mqttMessage){
+        BrokerMqttMessage brokerMqttMessage = new BrokerMqttMessage(UUID.randomUUID().toString(),
+                mqttMessage.fixedHeader(),mqttMessage.variableHeader(),mqttMessage.payload(),
+                mqttMessage.decoderResult());
+        logger.info("发送消息：{}", JSON.toJSONString(brokerMqttMessage));
+        mqService.send(JSON.toJSONString(brokerMqttMessage), ExchangeEnum.DEFAULT_FANOUT_EXCHANGE,"");
     }
 
 

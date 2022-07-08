@@ -25,8 +25,8 @@ public class BrokerConfig {
         return new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     }
 
-    @Bean(name = "mqttChannelInboundHandler")
-    public MqttChannelInboundHandler mqttChannelInboundHandler(){
-        return new MqttChannelInboundHandler(channelGroup());
-    }
+//    @Bean(name = "mqttChannelInboundHandler")
+//    public MqttChannelInboundHandler mqttChannelInboundHandler(){
+//        return new MqttChannelInboundHandler(channelGroup());
+//    }
 }

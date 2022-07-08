@@ -1,4 +1,4 @@
-package com.lmk.mqtt.config;
+package com.lmk.mqtt.config.mqconfig;
 
 import com.lmk.mqtt.exchange.ExchangeEnum;
 import org.springframework.amqp.core.DirectExchange;
