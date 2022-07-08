@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "name": "mqtt",
+      "type": "com.lmk.mqtt.entity.MqttProperties",
+      "sourceType": "com.lmk.mqtt.entity.MqttProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "mqtt.password",
+      "type": "java.lang.String",
+      "sourceType": "com.lmk.mqtt.entity.MqttProperties"
+    },
+    {
+      "name": "mqtt.port",
+      "type": "java.lang.Integer",
+      "sourceType": "com.lmk.mqtt.entity.MqttProperties"
+    },
+    {
+      "name": "mqtt.username",
+      "type": "java.lang.String",
+      "sourceType": "com.lmk.mqtt.entity.MqttProperties"
+    }
+  ],
+  "hints": []
+}

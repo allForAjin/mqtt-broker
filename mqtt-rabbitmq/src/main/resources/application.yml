@@ -1,0 +1,6 @@
+spring:
+  rabbitmq:
+    host: 10.200.44.212
+    username: lmk
+    password: lmk
+    virtual-host: test
